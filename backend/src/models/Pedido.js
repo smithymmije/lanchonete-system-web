@@ -12,7 +12,7 @@ const PedidoSchema = new mongoose.Schema({
   clienteTelefone: String,
   status: { 
     type: String, 
-    enum: ['aguardando_pagamento', 'pago', 'preparando', 'pronto', 'entregue'], 
+    enum: ['aguardando_pagamento', 'pago', 'preparando', 'pronto', 'saiu_entrega', 'entregue'], 
     default: 'aguardando_pagamento' 
   },
   linkAcompanhamento: { type: String, unique: true, required: true },

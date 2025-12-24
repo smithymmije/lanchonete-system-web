@@ -282,7 +282,8 @@ function getStatusColor(s) {
         pago: 'info',
         preparando: 'primary',
         pronto: 'success',
-        entregue: 'secondary'
+        saiu_entrega: 'info',   // azul claro
+        entregue: 'secondary'   // cinza
     }[s] || 'dark';
 }
 
@@ -292,6 +293,7 @@ function getStatusText(s) {
         pago: 'Pago',
         preparando: 'Preparando',
         pronto: 'Pronto',
+        saiu_entrega: 'Saiu p/ Entrega',
         entregue: 'Entregue'
     }[s] || s;
 }
@@ -300,7 +302,9 @@ function getStatusButtons(p) {
     const map = {
         aguardando_pagamento: `<button class="btn btn-warning btn-sm" onclick="atualizarStatus('${p._id}','pago')">Confirmar</button>`,
         pago: `<button class="btn btn-primary btn-sm" onclick="atualizarStatus('${p._id}','preparando')">Produção</button>`,
-        preparando: `<button class="btn btn-success btn-sm" onclick="atualizarStatus('${p._id}','pronto')">Pronto</button>`
+        preparando: `<button class="btn btn-success btn-sm" onclick="atualizarStatus('${p._id}','pronto')">Pronto</button>`,
+        pronto: `<button class="btn btn-info btn-sm" onclick="atualizarStatus('${p._id}','saiu_entrega')">Saiu p/ Entrega</button>`,
+        saiu_entrega: `<button class="btn btn-secondary btn-sm" onclick="atualizarStatus('${p._id}','entregue')">Entregue</button>`
     };
     return map[p.status] || '';
 }
