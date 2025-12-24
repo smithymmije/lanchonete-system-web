@@ -1,0 +1,36 @@
+services:
+  # 1. Backend (Web Service)
+  - type: web
+    name: lanchonete-backend
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 4000
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: FRONT_CLIENT_URL
+        value: https://lanchonete-client.onrender.com
+      - key: FRONT_ADMIN_URL
+        value: https://lanchonete-admin.onrender.com
+
+  # 2. Cliente (Static Site)
+  - type: static
+    name: lanchonete-client
+    env: static
+    rootDir: frontend-client
+    buildCommand: ""
+    publishDir: "."
+
+  # 3. Admin (Static Site)
+  - type: static
+    name: lanchonete-admin
+    env: static
+    rootDir: frontend-admin
+    buildCommand: ""
+    publishDir: "."

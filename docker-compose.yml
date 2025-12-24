@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:6
+    container_name: lanchonete-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: lanchonete
+
+  backend:
+    build: ./backend
+    container_name: lanchonete-backend
+    ports:
+      - "4000:4000"
+    depends_on:
+      - mongo
+    volumes:
+      - ./backend/uploads:/app/uploads
+    environment:
+      - PORT=4000
+      - MONGODB_URI=mongodb://mongo:27017/lanchonete
+      - MP_ACCESS_TOKEN=${MP_ACCESS_TOKEN}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - FRONT_CLIENT_URL=http://localhost:8080
+      - FRONT_ADMIN_URL=http://localhost:3000
+      - BACK_URL=http://localhost:4000
+
+  frontend-client:
+    image: nginx:alpine
+    container_name: lanchonete-client
+    ports:
+      - "8080:80"
+    volumes:
+      - ./frontend-client:/usr/share/nginx/html
+
+  frontend-admin:
+    image: nginx:alpine
+    container_name: lanchonete-admin
+    ports:
+      - "3000:80"
+    volumes:
+      - ./frontend-admin:/usr/share/nginx/html
+
+volumes:
+  mongo_data:

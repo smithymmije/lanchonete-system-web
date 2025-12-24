@@ -1,0 +1,80 @@
+/* ===== GALERIA DE PRODUTOS ===== */
+#galeria-produtos {
+    padding: 2rem 0;
+}
+
+.produto-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.produto-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.produto-imagem {
+    height: 200px;
+    object-fit: cover;
+    border-radius: 12px 12px 0 0;
+}
+
+.produto-titulo {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #dc3545;
+}
+
+.produto-preco {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #28a745;
+}
+
+.produto-badge {
+    font-size: 0.75rem;
+    padding: 0.4em 0.6em;
+}
+
+/* ===== BOTÕES ===== */
+.btn-produto {
+    border-radius: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+}
+
+.sidebar .nav-link {
+    border-radius: 8px;
+    margin-bottom: 4px;
+    transition: background 0.3s;
+}
+
+.sidebar .nav-link:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+/* ===== FORMULÁRIO ===== */
+.form-control, .form-select {
+    border-radius: 10px;
+    border: 1px solid #ced4da;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220,53,69,.25);
+}
+
+/* ===== SCROLL SUAVE ===== */
+html {
+    scroll-behavior: smooth;
+}
