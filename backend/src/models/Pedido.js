@@ -10,6 +10,14 @@ const PedidoSchema = new mongoose.Schema({
   total: { type: Number, required: true },
   clienteNome: { type: String, required: true },
   clienteTelefone: String,
+  enderecoEntrega: {
+    cep: String,
+    rua: String,
+    numero: String,
+    complemento: String,
+    bairro: String,
+    cidade: String
+  },
   status: { 
     type: String, 
     enum: ['aguardando_pagamento', 'pago', 'preparando', 'pronto', 'saiu_entrega', 'entregue'], 
@@ -17,8 +25,8 @@ const PedidoSchema = new mongoose.Schema({
   },
   linkAcompanhamento: { type: String, unique: true, required: true },
   pixCopiaCola: String,
-  pixQrCode: String, // Base64 da imagem
-  mercadoPagoId: { type: String, index: true }, // ID retornado pela API de Pagamentos
+  pixQrCode: String,
+  mercadoPagoId: { type: String, index: true },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });
