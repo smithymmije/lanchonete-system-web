@@ -4,7 +4,6 @@ const { v4: uuidv4 } = require('uuid');
 const QRCode = require('qrcode');
 
 exports.criarPedido = async (req, res) => {
-console.log('BODY CHEGANDO:', JSON.stringify(req.body, null, 2));
   try {
     const { items, clienteNome, clienteTelefone } = req.body;
     let total = 0;

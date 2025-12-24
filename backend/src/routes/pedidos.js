@@ -41,7 +41,7 @@ function gerarCopiaCola(chave, nome, cidade, valor, txtId = 'LANCHONETE') {
 
 router.post('/', async (req, res) => {
     try {
-        const { items, clienteNome, clienteTelefone } = req.body;
+        const { items, clienteNome, clienteTelefone, enderecoEntrega } = req.body;
 
         if (!items || items.length === 0) {
             return res.status(400).json({ error: 'Carrinho vazio.' });
@@ -53,10 +53,7 @@ router.post('/', async (req, res) => {
 
         const linkAcompanhamento = crypto.randomBytes(10).toString('hex');
 
-        // Gera o Copia e Cola usando nossa função estável
         const copiaCola = gerarCopiaCola(PIX_KEY, MERCHANT_NAME, MERCHANT_CITY, totalCalculado);
-        
-        // Gera o QR Code
         const qrCodeBase64 = await QRCode.toDataURL(copiaCola);
 
         const novoPedido = new Pedido({
@@ -69,6 +66,7 @@ router.post('/', async (req, res) => {
             total: Number(totalCalculado),
             clienteNome,
             clienteTelefone,
+            enderecoEntrega, // ← agora vai pro banco
             linkAcompanhamento,
             pixCopiaCola: copiaCola,
             pixQrCode: qrCodeBase64.replace(/^data:image\/png;base64,/, ''),
