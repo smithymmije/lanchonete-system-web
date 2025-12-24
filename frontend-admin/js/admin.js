@@ -1,6 +1,15 @@
 //const API_URL = 'http://localhost:4000/api';
-
 const API_URL = 'https://lanchonete-system-web-backend.onrender.com/api';
+
+// ==========================================
+// 🔐 AUTH HEADERS (CORRIGIDO)
+// ==========================================
+function authHeaders(extra = {}) {
+    return {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        ...extra
+    };
+}
 
 // ==========================================
 // 🛡️ TRAVA DE SEGURANÇA
@@ -83,7 +92,7 @@ function atualizarLinksNav(index) {
 // =======================
 function carregarPedidos() {
     fetch(`${API_URL}/admin/pedidos`, {
-        headers: { Authorization: localStorage.getItem('token') }
+        headers: authHeaders()
     })
     .then(res => res.json())
     .then(data => {
@@ -95,7 +104,7 @@ function carregarPedidos() {
 
 function carregarProdutos() {
     fetch(`${API_URL}/admin/produtos`, {
-        headers: { Authorization: localStorage.getItem('token') }
+        headers: authHeaders()
     })
     .then(res => res.json())
     .then(data => {
@@ -134,10 +143,7 @@ function exibirPedidos() {
 function atualizarStatus(id, status) {
     fetch(`${API_URL}/admin/pedidos/${id}/status`, {
         method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: localStorage.getItem('token')
-        },
+        headers: authHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ status })
     }).then(() => carregarPedidos());
 }
@@ -160,24 +166,16 @@ function exibirProdutos() {
                     <h5>${p.nome}</h5>
                     <p class="text-muted small">${p.descricao || ''}</p>
                     <strong class="text-danger">R$ ${p.preco.toFixed(2)}</strong>
-                    
-                    <!-- BOTÕES DE AÇÃO -->
+
                     <div class="d-flex justify-content-between mt-3">
-                        <button class="btn btn-sm btn-outline-primary" onclick="editarProduto('${p._id}')">
-                            ✏️ Editar
-                        </button>
-                        
-                        <button class="btn btn-sm ${p.disponivel ? 'btn-outline-warning' : 'btn-outline-success'}" 
+                        <button class="btn btn-sm btn-outline-primary" onclick="editarProduto('${p._id}')">✏️ Editar</button>
+                        <button class="btn btn-sm ${p.disponivel ? 'btn-outline-warning' : 'btn-outline-success'}"
                                 onclick="alternarDisponibilidade('${p._id}', ${!p.disponivel})">
                             ${p.disponivel ? '⏸️ Pausar' : '▶️ Ativar'}
                         </button>
-                        
-                        <button class="btn btn-sm btn-outline-danger" onclick="excluirProduto('${p._id}')">
-                            🗑️ Excluir
-                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="excluirProduto('${p._id}')">🗑️ Excluir</button>
                     </div>
-                    
-                    <!-- STATUS VISUAL -->
+
                     <div class="mt-2">
                         <span class="badge bg-${p.disponivel ? 'success' : 'secondary'}">
                             ${p.disponivel ? 'Ativo' : 'Pausado'}
@@ -196,69 +194,44 @@ function editarProduto(id) {
     const p = produtos.find(prod => prod._id === id);
     if (!p) return;
 
-    console.log('Editando produto:', p); // DEBUG
-
-    // Preenche o formulário
     document.getElementById('produtoNome').value = p.nome;
     document.getElementById('produtoDescricao').value = p.descricao || '';
     document.getElementById('produtoPreco').value = p.preco;
     document.getElementById('produtoCategoria').value = p.categoria;
 
-    // Marca que está editando
     document.getElementById('produtoForm').dataset.editando = id;
-    
-    // Muda o título do formulário
+
     const titulo = document.querySelector('#novoProdutoSection h3');
     if (titulo) titulo.textContent = 'Editar Produto';
-    
+
     mostrarNovoProduto();
 }
 
 async function alternarDisponibilidade(id, disponivel) {
-    try {
-        const res = await fetch(`${API_URL}/admin/produtos/${id}/disponivel`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: localStorage.getItem('token')
-            },
-            body: JSON.stringify({ disponivel })
-        });
+    const res = await fetch(`${API_URL}/admin/produtos/${id}/disponivel`, {
+        method: 'PATCH',
+        headers: authHeaders({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({ disponivel })
+    });
 
-        if (res.ok) {
-            carregarProdutos();
-        } else {
-            alert('Erro ao alterar disponibilidade');
-        }
-    } catch (err) {
-        console.error(err);
-        alert('Erro de conexão');
-    }
+    if (res.ok) carregarProdutos();
+    else alert('Erro ao alterar disponibilidade');
 }
 
 async function excluirProduto(id) {
     if (!confirm('Tem certeza que deseja excluir este produto?')) return;
 
-    try {
-        const res = await fetch(`${API_URL}/admin/produtos/${id}`, {
-            method: 'DELETE',
-            headers: { Authorization: localStorage.getItem('token') }
-        });
+    const res = await fetch(`${API_URL}/admin/produtos/${id}`, {
+        method: 'DELETE',
+        headers: authHeaders()
+    });
 
-        if (res.ok) {
-            alert('Produto excluído com sucesso!');
-            carregarProdutos();
-        } else {
-            alert('Erro ao excluir produto');
-        }
-    } catch (err) {
-        console.error(err);
-        alert('Erro de conexão');
-    }
+    if (res.ok) carregarProdutos();
+    else alert('Erro ao excluir produto');
 }
 
 // =======================
-// FORMULÁRIO (POST/PUT)
+// FORMULÁRIO (POST / PUT)
 // =======================
 const formProd = document.getElementById('produtoForm');
 
@@ -269,7 +242,6 @@ if (formProd) {
         const formData = new FormData(formProd);
         const editandoId = formProd.dataset.editando;
 
-        // Remove imagem antiga se não escolheu nova
         if (!formData.get('imagem') && editandoId) {
             formData.delete('imagem');
         }
@@ -280,29 +252,22 @@ if (formProd) {
 
         const method = editandoId ? 'PUT' : 'POST';
 
-        try {
-            const res = await fetch(url, {
-                method,
-                headers: { Authorization: localStorage.getItem('token') },
-                body: formData
-            });
+        const res = await fetch(url, {
+            method,
+            headers: authHeaders(),
+            body: formData
+        });
 
-            if (res.ok) {
-                alert(editandoId ? 'Produto atualizado!' : 'Produto cadastrado!');
-                formProd.reset();
-                delete formProd.dataset.editando;
-                
-                // Volta título
-                const titulo = document.querySelector('#novoProdutoSection h3');
-                if (titulo) titulo.textContent = 'Cadastrar Novo Produto';
-                
-                mostrarProdutos();
-            } else {
-                alert('Erro ao salvar produto');
-            }
-        } catch (err) {
-            console.error(err);
-            alert('Erro de conexão');
+        if (res.ok) {
+            alert(editandoId ? 'Produto atualizado!' : 'Produto cadastrado!');
+            formProd.reset();
+            delete formProd.dataset.editando;
+            const titulo = document.querySelector('#novoProdutoSection h3');
+            if (titulo) titulo.textContent = 'Cadastrar Novo Produto';
+            mostrarProdutos();
+        } else {
+            const data = await res.json();
+            alert(data.erro || 'Erro ao salvar produto');
         }
     });
 }
