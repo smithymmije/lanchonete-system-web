@@ -278,14 +278,26 @@ function conectarSocket(link) {
     🔹 NOTIFICAÇÃO
 ====================================================== */
 function mostrarNotificacao(msg) {
+    // Cria o alert
     const toast = document.createElement('div');
-    toast.className = 'toast show position-fixed top-0 end-0 m-3 bg-dark text-white';
-    toast.style.zIndex = "9999";
-    toast.innerHTML = `<div class="toast-body">${msg}</div>`;
+    toast.className = 'alert alert-success alert-dismissible fade show position-fixed top-50 start-50 translate-middle';
+    toast.style.zIndex = '9999';
+    toast.style.minWidth = '250px';
+    toast.style.textAlign = 'center';
+    toast.innerHTML = `
+      <i class="bi bi-check-circle-fill me-2"></i>
+      ${msg}
+    `;
+  
+    // Adiciona ao body
     document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
-}
-
+  
+    // Remove após 2 segundos
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 150);
+    }, 2000);
+  }
 /* ======================================================
     🔹 INIT
 ====================================================== */
