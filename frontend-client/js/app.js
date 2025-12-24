@@ -1,4 +1,6 @@
-const API_URL = 'http://localhost:4000/api';
+//const API_URL = 'http://localhost:4000/api';
+
+const API_URL = 'https://lanchonete-system-web-backend.onrender.com/api';
 
 let produtos = [];
 let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
@@ -38,8 +40,8 @@ function exibirProdutos(produtosFiltrados) {
         container.innerHTML += `
             <div class="col-md-4 mb-4 produto-card" data-categoria="${produto.categoria}">
                 <div class="card h-100 shadow">
-                    <img src="${produto.imagem 
-                        ? `http://localhost:4000/uploads/${produto.imagem}` 
+                <img src="${produto.imagem 
+                        ? `https://lanchonete-system-web-backend.onrender.com/uploads/${produto.imagem}` 
                         : 'https://via.placeholder.com/300x200?text=Sem+Imagem'}"
                         class="card-img-top" style="height:200px; object-fit:cover;">
                     <div class="card-body">
@@ -223,7 +225,8 @@ async function finalizarPedido() {
 function conectarSocket(link) {
     if (socket) socket.disconnect();
 
-    socket = io('http://localhost:4000');
+    //socket = io('http://localhost:4000');
+    socket = io('https://lanchonete-system-web-backend.onrender.com');
     socket.emit('join-pedido', link);
 
     socket.on('statusUpdate', data => {
