@@ -1,4 +1,6 @@
-const API_URL = 'http://localhost:4000/api';
+//const API_URL = 'http://localhost:4000/api';
+
+const API_URL = 'https://lanchonete-system-web-backend.onrender.com/api';
 
 // ==========================================
 // 🛡️ TRAVA DE SEGURANÇA
