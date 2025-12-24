@@ -128,6 +128,15 @@ function exibirPedidos() {
     }
 
     pedidos.forEach(p => {
+        // Monta lista de itens
+        const itensHtml = p.items.map(item =>
+            `<li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>${item.quantidade}x ${item.nome}</span>
+                <span>R$ ${item.precoUnitario.toFixed(2)}</span>
+                <strong>R$ ${(item.quantidade * item.precoUnitario).toFixed(2)}</strong>
+            </li>`
+        ).join('');
+    
         container.innerHTML += `
         <div class="card mb-3 shadow-sm">
             <div class="card-body">
@@ -135,6 +144,14 @@ function exibirPedidos() {
                 <p><strong>Cliente:</strong> ${p.clienteNome}</p>
                 <p><strong>Contato:</strong> ${p.clienteTelefone}</p>
                 <p><strong>Total:</strong> R$ ${p.total.toFixed(2)}</p>
+    
+                <!-- Itens do pedido -->
+                <h6 class="mt-3 mb-2">Itens:</h6>
+                <ul class="list-group list-group-flush mb-3">
+                    ${itensHtml}
+                </ul>
+    
+                <!-- Endereço -->
                 ${
                   p.enderecoEntrega
                     ? `<p class="mb-1"><strong>Endereço:</strong>
@@ -145,6 +162,7 @@ function exibirPedidos() {
                        </p>`
                     : ''
                 }
+    
                 <span class="badge bg-${getStatusColor(p.status)}">${getStatusText(p.status)}</span>
                 <div class="mt-3">${getStatusButtons(p)}</div>
             </div>
