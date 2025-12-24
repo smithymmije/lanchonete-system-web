@@ -133,7 +133,18 @@ function exibirPedidos() {
             <div class="card-body">
                 <h5 class="text-danger">Pedido #${p._id.slice(-6)}</h5>
                 <p><strong>Cliente:</strong> ${p.clienteNome}</p>
+                <p><strong>Contato:</strong> ${p.clienteTelefone}</p>
                 <p><strong>Total:</strong> R$ ${p.total.toFixed(2)}</p>
+                ${
+                  p.enderecoEntrega
+                    ? `<p class="mb-1"><strong>Endereço:</strong>
+                         ${p.enderecoEntrega.rua}, ${p.enderecoEntrega.numero}
+                         ${p.enderecoEntrega.complemento ? '(' + p.enderecoEntrega.complemento + ')' : ''}
+                         – ${p.enderecoEntrega.bairro}, ${p.enderecoEntrega.cidade}
+                         – CEP: ${p.enderecoEntrega.cep}
+                       </p>`
+                    : ''
+                }
                 <span class="badge bg-${getStatusColor(p.status)}">${getStatusText(p.status)}</span>
                 <div class="mt-3">${getStatusButtons(p)}</div>
             </div>

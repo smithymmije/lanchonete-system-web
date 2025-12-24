@@ -157,6 +157,35 @@ function removerItem(index) {
     atualizarCarrinhoUI();
     mostrarCarrinho();
 }
+/* ======================================================
+    🔹 FINALIZAR PEDIDO - FUNÇÔES NOVAS
+====================================================== */
+function validarCampos() {
+    const campos = [
+        { id: 'clienteNome', nome: 'Nome completo' },
+        { id: 'clienteTelefone', nome: 'Celular (DDD)' },
+        { id: 'clienteCEP', nome: 'CEP' },
+        { id: 'clienteRua', nome: 'Rua' },
+        { id: 'clienteNumero', nome: 'Número' },
+        { id: 'clienteBairro', nome: 'Bairro' },
+        { id: 'clienteCidade', nome: 'Cidade' }
+    ];
+
+    for (let c of campos) {
+        const v = document.getElementById(c.id).value.trim();
+        if (!v) { alert(`Preencha o campo ${c.nome}`); return false; }
+    }
+
+    const tel = document.getElementById('clienteTelefone').value.replace(/\D/g, '');
+    if (tel.length !== 11) { alert('Telefone deve ter 11 dígitos (com DDD)'); return false; }
+
+    const cep = document.getElementById('clienteCEP').value.replace(/\D/g, '');
+    if (cep.length !== 8) { alert('CEP inválido'); return false; }
+
+    return true;
+}
+
+
 
 /* ======================================================
     🔹 FINALIZAR PEDIDO
@@ -166,16 +195,9 @@ async function finalizarPedido() {
         alert('Carrinho vazio!');
         return;
     }
+    if (!validarCampos()) return; // 👉 nova validação
 
-    const nome = prompt('Digite seu nome:');
-    const telefone = prompt('Digite seu telefone:');
-
-    if (!nome) return alert('Nome obrigatório');
-
-    const total = carrinho.reduce(
-        (acc, item) => acc + (Number(item.preco) * Number(item.quantidade)),
-        0
-    );
+    const total = carrinho.reduce((acc, item) => acc + (Number(item.preco) * Number(item.quantidade)), 0);
 
     try {
         const response = await fetch(`${API_URL}/pedidos`, {
@@ -189,13 +211,20 @@ async function finalizarPedido() {
                     nome: item.nome
                 })),
                 total: total,
-                clienteNome: nome,
-                clienteTelefone: telefone
+                clienteNome: document.getElementById('clienteNome').value.trim(),
+                clienteTelefone: document.getElementById('clienteTelefone').value.replace(/\D/g, ''),
+                enderecoEntrega: {
+                    cep: document.getElementById('clienteCEP').value.replace(/\D/g, ''),
+                    rua: document.getElementById('clienteRua').value.trim(),
+                    numero: document.getElementById('clienteNumero').value.trim(),
+                    complemento: document.getElementById('clienteComplemento').value.trim(),
+                    bairro: document.getElementById('clienteBairro').value.trim(),
+                    cidade: document.getElementById('clienteCidade').value.trim()
+                }
             })
         });
 
         const data = await response.json();
-
         if (!response.ok) {
             alert(data.error || 'Erro ao gerar Pix');
             return;
@@ -216,13 +245,11 @@ async function finalizarPedido() {
         checkoutModal.show();
 
         conectarSocket(data.linkAcompanhamento);
-
     } catch (err) {
         console.error(err);
         alert('Erro de conexão com o servidor');
     }
 }
-
 /* ======================================================
     🔹 SOCKET
 ====================================================== */
