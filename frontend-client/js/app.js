@@ -71,7 +71,9 @@ function exibirProdutos(produtosFiltrados) {
 function filtrarCategoria(categoria) {
     document.querySelectorAll('.produto-card').forEach(card => {
         card.style.display =
-            categoria === 'todos' || card.dataset.categoria === categoria
+            categoria === 'todos' ||
+            (categoria === 'combo' && card.dataset.categoria === 'combos') ||
+            card.dataset.categoria === categoria
                 ? 'block'
                 : 'none';
     });
