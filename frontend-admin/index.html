@@ -12,8 +12,6 @@
         .sidebar .nav-link:hover { background-color: rgba(255,255,255,0.1); }
         .sidebar .nav-link.active { background-color: rgba(255,255,255,0.2); font-weight: bold; }
         .main-content { margin-left: 240px; padding: 30px; }
-        .pedido-card { border-left: 6px solid #dc3545; transition: transform 0.2s; }
-        .pedido-card:hover { transform: translateY(-3px); }
         @media (max-width: 768px) {
             .sidebar { position: relative; width: 100%; min-height: auto; }
             .main-content { margin-left: 0; }
@@ -38,52 +36,66 @@
 
             <!-- PEDIDOS -->
             <div id="pedidosSection">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3>Gerenciar Pedidos</h3>
-                    <div class="btn-group shadow-sm">
-                        <button class="btn btn-outline-danger btn-sm" onclick="exibirPedidos('todos')">Todos</button>
-                        <button class="btn btn-outline-danger btn-sm" onclick="exibirPedidos('aguardando_pagamento')">Aguardando</button>
-                        <button class="btn btn-outline-danger btn-sm" onclick="exibirPedidos('pago')">Pagos</button>
-                        <button class="btn btn-outline-danger btn-sm" onclick="exibirPedidos('preparando')">Produção</button>
-                    </div>
-                </div>
+                <h3 class="mb-4">Gerenciar Pedidos</h3>
                 <div id="pedidosContainer"></div>
             </div>
 
             <!-- PRODUTOS -->
-            <div id="produtosSection" style="display: none;">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3>Meus Produtos</h3>
-                    <button class="btn btn-success" onclick="mostrarNovoProduto()">+ Novo Produto</button>
-                </div>
+            <div id="produtosSection" style="display:none;">
+                <h3 class="mb-4">Meus Produtos</h3>
                 <div id="produtosContainer"></div>
             </div>
 
             <!-- NOVO PRODUTO -->
-            <div id="novoProdutoSection" style="display: none;">
+            <div id="novoProdutoSection" style="display:none;">
                 <h3 class="mb-4">Cadastrar Novo Produto</h3>
-                <div class="card shadow-sm border-0" style="max-width: 700px;">
+
+                <div class="card shadow-sm border-0" style="max-width:700px;">
                     <div class="card-body p-4">
                         <form id="produtoForm">
+
                             <div class="mb-3">
                                 <label class="form-label">Nome do Produto</label>
-                                <input type="text" id="produtoNome" class="form-control" placeholder="Ex: X-Salada Especial" required>
+                                <input
+                                    type="text"
+                                    id="produtoNome"
+                                    name="nome"
+                                    class="form-control"
+                                    required
+                                >
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Descrição</label>
-                                <textarea id="produtoDescricao" class="form-control" rows="2"></textarea>
+                                <textarea
+                                    id="produtoDescricao"
+                                    name="descricao"
+                                    class="form-control"
+                                    rows="2"
+                                ></textarea>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Preço (R$)</label>
-                                    <input type="number" id="produtoPreco" class="form-control" step="0.01" required>
+                                    <input
+                                        type="number"
+                                        id="produtoPreco"
+                                        name="preco"
+                                        class="form-control"
+                                        step="0.01"
+                                        required
+                                    >
                                 </div>
 
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Categoria</label>
-                                    <select id="produtoCategoria" class="form-select" required>
+                                    <select
+                                        id="produtoCategoria"
+                                        name="categoria"
+                                        class="form-select"
+                                        required
+                                    >
                                         <option value="lanche">Lanches</option>
                                         <option value="bebida">Bebidas</option>
                                         <option value="combo">Combos</option>
@@ -94,15 +106,26 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Imagem do Produto</label>
-                                <input type="file" id="produtoImagem" class="form-control" accept="image/*">
+                                <input
+                                    type="file"
+                                    id="produtoImagem"
+                                    name="imagem"
+                                    class="form-control"
+                                    accept="image/*"
+                                >
                             </div>
 
                             <hr>
 
                             <div class="d-grid gap-2 d-md-flex">
-                                <button type="submit" class="btn btn-danger btn-lg px-5">Salvar Produto</button>
-                                <button type="button" class="btn btn-light btn-lg" onclick="mostrarProdutos()">Cancelar</button>
+                                <button type="submit" class="btn btn-danger btn-lg px-5">
+                                    Salvar Produto
+                                </button>
+                                <button type="button" class="btn btn-light btn-lg" onclick="mostrarProdutos()">
+                                    Cancelar
+                                </button>
                             </div>
+
                         </form>
                     </div>
                 </div>
