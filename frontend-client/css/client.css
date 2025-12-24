@@ -1,0 +1,55 @@
+.entrega-area {
+    margin: 1rem 0;
+  }
+  .entrega-barra {
+    position: relative;
+    height: 40px;
+    background: #ffe600;
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  .entrega-texto {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    color: #111;
+    z-index: 2;
+  }
+  .entrega-moto {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 24px;
+    z-index: 3;
+    animation: entregaVai 4s linear infinite;
+  }
+  @keyframes entregaVai {
+    0%   { left: -30px; }
+    100% { left: calc(100% + 30px); }
+  }
+  /* faixas andando no fundo */
+  .entrega-barra::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 200%;
+    height: 100%;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(255,255,255,.2) 10px,
+      rgba(255,255,255,.2) 20px
+    );
+    animation: fundoMove 2s linear infinite;
+  }
+  @keyframes fundoMove {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(50%); }
+  }
+
+  .status-box { padding: 40px; border-radius: 15px; background: #f8f9fa; border: 2px solid #dc3545; }
+  .step-active { color: #dc3545; font-weight: bold; }
