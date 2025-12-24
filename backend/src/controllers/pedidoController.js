@@ -27,12 +27,13 @@ exports.criarPedido = async (req, res) => {
     const linkAcompanhamento = uuidv4().substring(0, 8);
     const qrCodeData = `00020126580014BR.GOV.BCB.PIX0136teste@example.com5204000053039865404${total.toFixed(2)}5802BR5913LANCHONETE6009SAO_PAULO62070503***6304`;
     const qrCodeBase64 = await QRCode.toDataURL(qrCodeData);
-
+    
     const pedido = new Pedido({
       items: itemsProcessados,
       total,
       clienteNome,
       clienteTelefone,
+      enderecoEntrega, // ← agora vai pro banco
       linkAcompanhamento,
       pixCopiaCola: qrCodeData,
       pixQrCode: qrCodeBase64
