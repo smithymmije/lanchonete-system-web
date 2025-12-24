@@ -6,10 +6,11 @@ const API_URL = 'https://lanchonete-system-web-backend.onrender.com/api';
 // ==========================================
 function authHeaders(extra = {}) {
     return {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: localStorage.getItem('token'),
         ...extra
     };
 }
+
 
 // ==========================================
 // 🛡️ TRAVA DE SEGURANÇA
