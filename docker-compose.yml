@@ -22,9 +22,8 @@ services:
       - ./backend/uploads:/app/uploads
     environment:
       - PORT=4000
-      - MONGODB_URI=mongodb://mongo:27017/lanchonete
-      - MP_ACCESS_TOKEN=${MP_ACCESS_TOKEN}
-      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      # Se quiser usar o banco das nuvens no seu PC, troque a linha abaixo:
+      - MONGODB_URI=mongodb+srv://lanchonete-system-one:pCg3StODIoJYBfJ1@lanchonete-system-one...
       - FRONT_CLIENT_URL=http://localhost:8080
       - FRONT_ADMIN_URL=http://localhost:3000
       - BACK_URL=http://localhost:4000
