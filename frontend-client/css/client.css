@@ -53,3 +53,29 @@
 
   .status-box { padding: 40px; border-radius: 15px; background: #f8f9fa; border: 2px solid #dc3545; }
   .step-active { color: #dc3545; font-weight: bold; }
+
+  /*Footer*/
+  /* Footer tom-sobre-tom suave */
+  .footer-custom {
+    background: #6c1e1e; /* vermelho claro/sombreado */
+    color: #f5f5f5;
+    font-size: 0.9rem;
+  }
+  .footer-custom a {
+    color: #f5f5f5;
+    text-decoration: none;
+  }
+  .footer-custom a:hover {
+    color: #ffffff;
+  }
+  .footer-custom .bi {
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+  }
+  /* Centraliza no celular, 3 colunas em desktop */
+  @media (max-width: 576px) {
+    .footer-custom .row > div {
+      text-align: center !important;
+      margin-bottom: 1rem;
+    }
+  }
