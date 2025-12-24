@@ -1,5 +1,4 @@
 //const API_URL = 'http://localhost:4000/api';
-
 const API_URL = 'https://lanchonete-system-web-backend.onrender.com/api';
 
 let produtos = [];
@@ -15,7 +14,6 @@ async function carregarProdutos() {
         const response = await fetch(`${API_URL}/produtos`);
         produtos = await response.json();
 
-        // 🔥 GARANTE QUE PREÇO SEJA NUMBER
         produtos.forEach(p => {
             p.preco = Number(p.preco);
         });
@@ -28,7 +26,7 @@ async function carregarProdutos() {
 }
 
 /* ======================================================
-    🔹 EXIBIR PRODUTOS
+    🔹 EXIBIR PRODUTOS (COM INDISPOINÍVEL)
 ====================================================== */
 function exibirProdutos(produtosFiltrados) {
     const container = document.getElementById('produtosContainer');
@@ -37,21 +35,29 @@ function exibirProdutos(produtosFiltrados) {
     container.innerHTML = '';
 
     produtosFiltrados.forEach(produto => {
+        const disponivel = produto.disponivel !== false;
+
         container.innerHTML += `
             <div class="col-md-4 mb-4 produto-card" data-categoria="${produto.categoria}">
                 <div class="card h-100 shadow">
-                <img src="${produto.imagem 
-                        ? `https://lanchonete-system-web-backend.onrender.com/uploads/${produto.imagem}` 
-                        : 'https://via.placeholder.com/300x200?text=Sem+Imagem'}"
-                        class="card-img-top" style="height:200px; object-fit:cover;">
+                    <img src="${produto.imagem 
+                            ? `https://lanchonete-system-web-backend.onrender.com/uploads/${produto.imagem}` 
+                            : 'https://via.placeholder.com/300x200?text=Sem+Imagem'}"
+                            class="card-img-top" style="height:200px; object-fit:cover;">
                     <div class="card-body">
                         <h5>${produto.nome}</h5>
                         <p>${produto.descricao || ''}</p>
                         <h4 class="text-danger">R$ ${produto.preco.toFixed(2)}</h4>
-                        <button class="btn btn-danger w-100"
-                            onclick="adicionarCarrinho('${produto._id}')">
-                            Adicionar ao Carrinho
-                        </button>
+
+                        ${disponivel
+                            ? `<button class="btn btn-danger w-100"
+                                    onclick="adicionarCarrinho('${produto._id}')">
+                                    Adicionar ao Carrinho
+                               </button>`
+                            : `<button class="btn btn-secondary w-100" disabled>
+                                    Indisponível
+                               </button>`
+                        }
                     </div>
                 </div>
             </div>
@@ -72,11 +78,14 @@ function filtrarCategoria(categoria) {
 }
 
 /* ======================================================
-    🔹 CARRINHO
+    🔹 CARRINHO (COM PROTEÇÃO)
 ====================================================== */
 function adicionarCarrinho(produtoId) {
     const produto = produtos.find(p => p._id === produtoId);
-    if (!produto) return;
+    if (!produto || !produto.disponivel) {
+        alert('Produto indisponível no momento.');
+        return;
+    }
 
     const existente = carrinho.find(i => i.produtoId === produtoId);
 
@@ -86,7 +95,7 @@ function adicionarCarrinho(produtoId) {
         carrinho.push({
             produtoId: produto._id,
             nome: produto.nome,
-            preco: Number(produto.preco), // 🔥 FORÇA NUMBER
+            preco: Number(produto.preco),
             quantidade: 1
         });
     }
@@ -135,8 +144,6 @@ function mostrarCarrinho() {
     }
 
     totalEl.textContent = total.toFixed(2);
-    
-    // Pequeno ajuste para abrir o modal corretamente
     const modalEl = document.getElementById('carrinhoModal');
     const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
     modal.show();
@@ -150,7 +157,7 @@ function removerItem(index) {
 }
 
 /* ======================================================
-    🔹 FINALIZAR PEDIDO (PIX DIRETO)
+    🔹 FINALIZAR PEDIDO
 ====================================================== */
 async function finalizarPedido() {
     if (carrinho.length === 0) {
@@ -163,7 +170,6 @@ async function finalizarPedido() {
 
     if (!nome) return alert('Nome obrigatório');
 
-    // 🔥 TOTAL CALCULADO
     const total = carrinho.reduce(
         (acc, item) => acc + (Number(item.preco) * Number(item.quantidade)),
         0
@@ -180,7 +186,7 @@ async function finalizarPedido() {
                     precoUnitario: Number(item.preco),
                     nome: item.nome
                 })),
-                total: total, // 🔥 LINHA ADICIONADA: Agora envia o valor para o seu Pix próprio
+                total: total,
                 clienteNome: nome,
                 clienteTelefone: telefone
             })
@@ -193,18 +199,14 @@ async function finalizarPedido() {
             return;
         }
 
-        // Exibe os dados do PIX gerados pela sua chave ejimmysmith@gmail.com
         document.getElementById('qrCode').src = `data:image/png;base64,${data.pixQrCode}`;
         document.getElementById('copiaCola').textContent = data.pixCopiaCola;
-
         document.getElementById('linkAcompanhamento').href = `/pedido.html?id=${data.linkAcompanhamento}`;
 
-        // Limpeza
         carrinho = [];
         salvarCarrinho();
         atualizarCarrinhoUI();
 
-        // Troca os modais
         const carrinhoModal = bootstrap.Modal.getInstance(document.getElementById('carrinhoModal'));
         if (carrinhoModal) carrinhoModal.hide();
 
@@ -225,7 +227,6 @@ async function finalizarPedido() {
 function conectarSocket(link) {
     if (socket) socket.disconnect();
 
-    //socket = io('http://localhost:4000');
     socket = io('https://lanchonete-system-web-backend.onrender.com');
     socket.emit('join-pedido', link);
 
