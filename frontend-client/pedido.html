@@ -38,7 +38,8 @@
 
     <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
     <script>
-        const API_URL = 'http://localhost:4000/api';
+        //const API_URL = 'http://localhost:4000/api';
+        const API_URL = 'https://lanchonete-system-web-backend.onrender.com/api';
         const urlParams = new URLSearchParams(window.location.search);
         const pedidoId = urlParams.get('id');
         let socket = null;
@@ -83,7 +84,8 @@
         }
 
         function conectarSocket() {
-            socket = io('http://localhost:4000');
+            //socket = io('http://localhost:4000');
+            socket = io('https://lanchonete-system-web-backend.onrender.com');
             socket.emit('join-pedido', pedidoId);
             
             socket.on('statusUpdate', (data) => {
